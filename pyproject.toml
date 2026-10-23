@@ -1,0 +1,48 @@
+[project]
+name = "tinyasm"
+version = "0.1.0"
+description = "Evaluador/simulador de un subconjunto de x86 de 32 bits (IA-32) con sintaxis Intel"
+readme = "README.md"
+authors = [
+    { name = "GabJuarez", email = "juarezgabriel742@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "W",   # pycodestyle (warnings)
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # reglas propias de ruff
+]
+ignore = [
+    # Comentarios, docstrings y mensajes van en español: no marcar caracteres
+    # "ambiguos" (acentos, ñ, comillas tipográficas, etc.).
+    "RUF001",
+    "RUF002",
+    "RUF003",
+]
