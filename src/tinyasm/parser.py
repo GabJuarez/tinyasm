@@ -3,14 +3,12 @@
 Gramática propuesta (una instrucción por línea, descendente recursivo):
 
     line     := (IDENT ':')* [IDENT [operand (',' operand)*]] NEWLINE
-    operand  := [SIZE ['ptr']] '[' memexpr ']' | ['-'] NUMBER | IDENT
-    memexpr  := term (('+' | '-') term)*
-    term     := REG ['*' NUMBER] | NUMBER ['*' REG]
+    operand  := ['-'] NUMBER | IDENT
 
 Responsabilidades:
 - Clasificar identificadores: registro (``isa.is_register``) o etiqueta (``LabelRef``).
 - Construir la tabla ``etiqueta -> índice de instrucción``.
-- Validar la forma (escala 1/2/4/8, etiquetas duplicadas...) y lanzar ``ParseError``.
+- Validar la forma (etiquetas duplicadas, tokens sobrantes...) y lanzar ``ParseError``.
 - NO valida si el mnemónico existe ni si los operandos tienen sentido: eso es del executor.
 """
 

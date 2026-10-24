@@ -2,7 +2,7 @@
 
 "Todo lo que sea decisión de flujo o mutación de estado" vive aquí:
 resolver operandos a valores, pedirle cálculos al evaluator, escribir el
-resultado en registros/memoria/flags y mover EIP (incluidos los saltos).
+resultado en registros/flags y mover EIP (incluidos los saltos).
 
 Para agregar una instrucción: escribe un método ``_op_<mnemonic>`` y regístralo
 en ``_handlers``. Ver docs/conventions.md.
@@ -11,7 +11,7 @@ en ``_handlers``. Ver docs/conventions.md.
 from collections.abc import Callable
 
 from tinyasm.machine import CPU
-from tinyasm.nodes import Instruction, Memory, Operand, Program
+from tinyasm.nodes import Instruction, Operand, Program
 from tinyasm.parser import parse
 
 type Handler = Callable[[Instruction], None]
@@ -39,9 +39,6 @@ class Executor:
         raise NotImplementedError
 
     def _write(self, operand: Operand, value: int) -> None:
-        raise NotImplementedError
-
-    def _effective_address(self, memory: Memory) -> int:
         raise NotImplementedError
 
     # --- instrucciones (_op_<mnemonic>) -----------------------------------

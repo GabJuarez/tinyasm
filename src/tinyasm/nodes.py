@@ -18,22 +18,11 @@ class Immediate:
 
 
 @dataclass(frozen=True, slots=True)
-class Memory:
-    """Dirección efectiva: ``[base + index*scale + displacement]``."""
-
-    base: str | None = None
-    index: str | None = None
-    scale: int = 1
-    displacement: int = 0
-    size: int | None = None  # bits; None si no se indicó "byte/word/dword ptr"
-
-
-@dataclass(frozen=True, slots=True)
 class LabelRef:
     name: str
 
 
-type Operand = Register | Immediate | Memory | LabelRef
+type Operand = Register | Immediate | LabelRef
 
 
 @dataclass(frozen=True, slots=True)

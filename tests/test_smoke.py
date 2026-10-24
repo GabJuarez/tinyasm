@@ -3,8 +3,8 @@
 from tinyasm import isa
 
 
-def test_register_table_has_subregisters():
-    assert isa.REGISTERS["ah"] == isa.RegisterInfo("eax", 8, 8)
-    assert isa.REGISTERS["sp"] == isa.RegisterInfo("esp", 16)
+def test_is_register():
     assert isa.is_register("EAX")
+    assert isa.is_register("ebp")
+    assert not isa.is_register("ax")
     assert not isa.is_register("loop_start")
