@@ -10,7 +10,7 @@ ejecutarlo paso a paso y visualizar registros, flags y memoria en una UI de escr
 - [x] Documentación inicial
 
 ## Fase 1 — Pipeline mínimo (`mov`, `add`, `sub`)
-- [ ] Tokenizer: identificadores, números (dec/hex/bin), símbolos, comentarios
+- [x] Tokenizer: identificadores, números (dec/hex/bin), símbolos, comentarios
 - [ ] Parser: registros, inmediatos, etiquetas
 - [ ] Parser: operandos de memoria `[base + index*escala ± desplazamiento]` y `dword ptr`
 - [ ] Evaluator: `to_signed`, `add`, `sub` con CF/ZF/SF/OF

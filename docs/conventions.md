@@ -11,6 +11,10 @@
 - Anotaciones de tipo en todas las funciones públicas; sintaxis moderna (`int | None`, `list[int]`).
 - Datos inmutables con `@dataclass(frozen=True, slots=True)`.
 - Registros y mnemónicos se normalizan a **minúsculas** en el parser.
+- Formatos aceptados por el tokenizer:
+  - Números: decimal (`10`), hexadecimal (`0x1F` o `1Fh`) y binario (`0b101`). Un hexadecimal con sufijo `h` debe empezar con dígito (`0FFh`, no `FFh`).
+  - Identificadores: empiezan con letra, `_`, `.` o `?` y pueden contener además dígitos.
+  - Comentarios: desde `;` hasta el fin de la línea.
 - Valores de registros y memoria se guardan **sin signo** (`0 <= v < 2**bits`). Para interpretarlos con signo, usar `evaluator.to_signed`.
 
 ## Reglas de arquitectura
