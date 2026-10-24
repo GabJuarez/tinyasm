@@ -15,7 +15,7 @@
   - Números: decimal (`10`), hexadecimal (`0x1F` o `1Fh`) y binario (`0b101`). Un hexadecimal con sufijo `h` debe empezar con dígito (`0FFh`, no `FFh`).
   - Identificadores: empiezan con letra, `_`, `.` o `?` y pueden contener además dígitos.
   - Comentarios: desde `;` hasta el fin de la línea.
-- Valores de registros y memoria se guardan **sin signo** (`0 <= v < 2**bits`). Para interpretarlos con signo, usar `evaluator.to_signed`.
+- Los valores de los registros se guardan **sin signo** (`0 <= v < 2**bits`). Para interpretarlos con signo, usar `evaluator.to_signed`.
 
 ## Reglas de arquitectura
 - El **Evaluator** es puro: no importa `machine`, `executor`, `nodes` ni `tokenizer`.
@@ -28,6 +28,8 @@
 3. Agrega una prueba de extremo a extremo en `tests/test_executor.py`.
 4. Actualiza la tabla de instrucciones en [`status.md`](status.md) y marca la casilla en [`roadmap.md`](roadmap.md).
 
+Antes de agregar una instrucción que no esté en [`instructions.md`](instructions.md), coméntenlo en equipo: el alcance está recortado a propósito (ver [`roadmap.md`](roadmap.md#fuera-de-alcance)).
+
 ## Pruebas
 - Cada función pública lleva pruebas.
 - Las pruebas de etapas pendientes están marcadas con `xfail(strict=True)`. Cuando implementes la etapa, **quita el `pytestmark`** del archivo: si no lo quitas, pytest falla precisamente para recordártelo.
@@ -35,5 +37,5 @@
 ## Git
 - Rama `main` protegida por convención: todo entra por Pull Request con al menos una revisión.
 - Ramas: `feat/<tema>`, `fix/<tema>`, `docs/<tema>`, `refactor/<tema>`, `test/<tema>`.
-- Commits con [Conventional Commits](https://www.conventionalcommits.org/es/): `feat(parser): soportar operandos de memoria`.
+- Commits con [Conventional Commits](https://www.conventionalcommits.org/es/): `feat(parser): soportar etiquetas`.
 - Antes de abrir el PR, `uv run ruff check .` y `uv run pytest` deben pasar en local.

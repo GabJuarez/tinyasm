@@ -1,7 +1,11 @@
 # Roadmap
 
-**Objetivo final:** cargar un programa en un subconjunto de IA-32 con sintaxis Intel,
-ejecutarlo paso a paso y visualizar registros, flags y memoria en una UI de escritorio (PyQt).
+**Objetivo:** un emulador de un subconjunto de IA-32 (sintaxis Intel) cuyo foco es **evaluar
+`cmp`, `jmp` y los saltos condicionales (`jcc`)**, con una interfaz en PyQt para ejecutar el
+programa paso a paso y ver cómo cambian los registros, las flags y el flujo.
+
+Plazo: una semana desde la asignación. Por eso el alcance está recortado a lo necesario para
+que `cmp` / `jcc` / `jmp` funcionen y se puedan mostrar.
 
 ## Fase 0 — Scaffolding ✅
 - [x] Proyecto con uv, ruff y pytest
@@ -9,36 +13,35 @@ ejecutarlo paso a paso y visualizar registros, flags y memoria en una UI de escr
 - [x] Pruebas de contrato (`xfail`) para cada etapa
 - [x] Documentación inicial
 
-## Fase 1 — Pipeline mínimo (`mov`, `add`, `sub`)
+## Fase 1 — Motor
 - [x] Tokenizer: identificadores, números (dec/hex/bin), símbolos, comentarios
-- [ ] Parser: registros, inmediatos, etiquetas
-- [ ] Parser: operandos de memoria `[base + index*escala ± desplazamiento]` y `dword ptr`
+- [ ] Parser: registros, inmediatos (incluidos negativos) y etiquetas
 - [ ] Evaluator: `to_signed`, `add`, `sub` con CF/ZF/SF/OF
-- [ ] Machine: lectura/escritura de subregistros (`ax`, `al`, `ah`) y memoria little-endian
-- [ ] Executor: `step`, `run`, resolución de operandos, `mov`, `add`, `sub`
-- [ ] Prueba que ejecute los programas de `examples/`
+- [ ] Evaluator: `condition_met` con todos los `jcc` de [instructions.md](instructions.md)
+- [ ] Machine: los 8 registros de 32 bits y las flags
+- [ ] Executor: `step`, `run` y protección contra ciclos infinitos (`max_steps`)
+- [ ] Executor: `mov`, `add`, `sub`, `inc`, `dec`
+- [ ] Executor: `cmp`, `jmp`, `jcc`, `hlt`
 
-## Fase 2 — Control de flujo
-- [ ] `cmp`, `jmp`
-- [ ] Saltos condicionales: `je/jz`, `jne/jnz`, `jg`, `jge`, `jl`, `jle`, `ja`, `jae`, `jb`, `jbe`
-- [ ] `hlt` y fin de programa
-- [ ] Protección contra ciclos infinitos (`max_steps`)
-
-## Fase 3 — Más instrucciones
-- [ ] Lógicas: `and`, `or`, `xor`, `not`, `test`
-- [ ] `inc`, `dec`, `neg`
-- [ ] Corrimientos: `shl`, `shr`, `sar`, `rol`, `ror`
-- [ ] `mul`, `imul`, `div`, `idiv` (con `edx:eax`)
-- [ ] Pila: `push`, `pop`, `call`, `ret`
-- [ ] Flags PF y AF
-
-## Fase 4 — UI en PyQt
-- [ ] Editor de código con resaltado de la línea actual
+## Fase 2 — Interfaz (PyQt)
+- [ ] Editor de código con la línea actual resaltada
 - [ ] Botones ejecutar / paso a paso / reiniciar
-- [ ] Paneles de registros, flags y memoria
+- [ ] Panel de registros (hexadecimal y decimal con signo)
+- [ ] Panel de flags (CF, ZF, SF, OF)
+- [ ] Indicador de si el último salto se tomó o no, y a qué etiqueta
 - [ ] Errores mostrados en la línea correspondiente
 
-## Ideas a futuro
-- Secciones `.data` / `.text` y directivas `db`, `dw`, `dd`
-- Etiquetas como direcciones de memoria (`mov eax, [var]`)
-- Historial para "deshacer paso"
+## Fase 3 — Entrega
+- [ ] Programas de ejemplo en `examples/` que cubran cada familia de `jcc`
+- [ ] Ejemplo que muestre la diferencia entre comparación con signo y sin signo (`jg` vs `ja`)
+- [ ] README con instrucciones para abrir la interfaz
+
+## Fuera de alcance
+Decidido para que entre en el plazo; se puede retomar si sobra tiempo:
+
+- Operandos de memoria (`[ebx + 4]`, `dword ptr`) y memoria en general
+- Subregistros de 16 y 8 bits (`ax`, `al`, `ah`)
+- Secciones `.data` / `.text` y directivas (`db`, `dw`, `dd`)
+- Pila: `push`, `pop`, `call`, `ret`
+- `mul`, `div`, lógicas (`and`, `or`, `xor`, `test`) y corrimientos
+- Flags PF y AF

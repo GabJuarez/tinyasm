@@ -4,7 +4,7 @@
 texto .asm ──► Tokenizer ──► Parser ──► Executor ◄──► Evaluator
                 (tokens)   (Program)       │        (funciones puras)
                                            ▼
-                                      CPU (estado)
+                                      CPU (estado) ──► UI (PyQt)
 ```
 
 | Etapa | Módulo | Entrada → Salida | Puede fallar con |
@@ -16,12 +16,20 @@ texto .asm ──► Tokenizer ──► Parser ──► Executor ◄──► 
 
 Módulos de apoyo:
 
-- `nodes.py`: nodos inmutables del programa (`Instruction`, `Register`, `Immediate`, `Memory`, `LabelRef`, `Program`).
-- `machine.py`: `CPU` y `Memory`, el **único estado mutable**.
-- `isa.py`: tablas estáticas de IA-32 (registros, subregistros, tamaños).
+- `nodes.py`: nodos inmutables del programa (`Instruction`, `Register`, `Immediate`, `LabelRef`, `Program`).
+- `machine.py`: `CPU` (registros, flags, EIP), el **único estado mutable**.
+- `isa.py`: tablas estáticas de IA-32 (registros).
 - `errors.py`: jerarquía de errores; todos llevan número de línea.
 
-La interfaz de usuario (PyQt) consumirá directamente `run_source` / `Executor` (ver roadmap).
+## Interfaz
+
+La UI vivirá en el subpaquete `src/tinyasm/ui/` y PyQt se agregará como dependencia opcional
+(`uv add --optional ui pyqt6`), para que quien solo trabaje en el motor no tenga que instalarlo.
+
+- La UI **solo consume** el motor: crea un `Executor`, llama a `step()` o `run()` y pinta
+  `executor.cpu.registers`, `executor.cpu.flags` y `executor.cpu.eip`.
+- El motor **nunca** importa nada de `ui`.
+- Un `src/tinyasm/__main__.py` abrirá la ventana con `uv run python -m tinyasm`.
 
 ## Frontera Evaluator / Executor
 
@@ -32,19 +40,27 @@ La regla para decidir dónde va algo:
 
 | Ejemplo | Dónde | Por qué |
 |---|---|---|
-| ¿Cuánto da `a + b` en 32 bits y qué flags deja? | Evaluator (`add`) | cálculo puro |
+| ¿Cuánto da `a - b` en 32 bits y qué flags deja? | Evaluator (`sub`) | cálculo puro |
 | ¿Se cumple `jg` con estas flags? | Evaluator (`condition_met`) | pregunta con respuesta booleana |
-| Leer `ebx`, calcular `[ebx+4]`, leer memoria | Executor | resolver operandos usa el estado |
-| Escribir el resultado en `eax` y actualizar flags | Executor | mutación |
-| Saltar a `loop_start` si `condition_met` es verdadero | Executor | decisión de flujo |
+| Leer el valor de `ebx` para usarlo como operando | Executor | resolver operandos usa el estado |
+| Guardar las flags que devolvió `sub` al ejecutar `cmp` | Executor | mutación |
+| Cambiar EIP a `loop_start` si `condition_met` es verdadero | Executor | decisión de flujo |
 
 El Evaluator **nunca** recibe tokens, nodos ni la `CPU`: sólo números y `Flags`.
 Por eso se puede probar sin parsear nada.
 
+### Ejemplo: cómo se ejecuta `cmp eax, 5` seguido de `jl menor`
+
+1. El executor lee `eax` de la CPU (digamos que vale 3).
+2. Llama a `evaluator.sub(3, 5)` → resultado `0xFFFFFFFE` con SF = 1, OF = 0, CF = 1, ZF = 0.
+3. Como es `cmp`, descarta el resultado y solo guarda las flags en la CPU.
+4. En `jl menor`, llama a `evaluator.condition_met("l", flags)` → SF ≠ OF → `True`.
+5. Busca `menor` en `program.labels` y pone ese índice en EIP.
+
 ## Decisiones de diseño
 
 - **EIP es un índice de instrucción**, no una dirección en bytes. No ensamblamos a código máquina, así que no conocemos el tamaño real de cada instrucción.
-- **Memoria dispersa** (`dict[int, int]` por byte, little-endian): sólo existe lo que se escribe.
+- **Solo registros de 32 bits**, sin memoria: todos los operandos son registros, inmediatos o etiquetas (ver [roadmap.md](roadmap.md#fuera-de-alcance)).
+- **Valores sin signo en los registros** (`0 <= v < 2**32`); con signo solo al interpretarlos (`to_signed`).
 - **Una instrucción por línea**, con etiquetas opcionales antes.
-- **Nodos inmutables** (`frozen=True`): el programa no cambia durante la ejecución, lo que facilita el "paso a paso" en la futura UI.
-- **Sin dependencias en tiempo de ejecución** por ahora; PyQt se agregará como dependencia opcional cuando empiece la UI.
+- **Nodos inmutables** (`frozen=True`): el programa no cambia durante la ejecución, lo que facilita el paso a paso en la UI.
