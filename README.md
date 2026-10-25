@@ -39,12 +39,17 @@ uv instala por su cuenta la versión de Python correcta (3.12+).
 ```bash
 git clone https://github.com/GabJuarez/tinyasm.git
 cd tinyasm
-uv sync          # crea .venv e instala todo
-uv run pytest    # pruebas
+uv sync --extra ui         # crea .venv e instala todo, PyQt6 incluido
+uv run python -m tinyasm   # abre la interfaz
+uv run pytest              # pruebas
 ```
 
-La interfaz está en desarrollo (ver [estado](docs/status.md)). Mientras tanto, el motor se
-puede usar desde Python:
+En la interfaz se escribe (o se elige de **Ejemplos**) un programa y se ejecuta completo con
+**Ejecutar** o instrucción por instrucción con **Paso**. Se ven los registros en hexadecimal,
+sin signo y con signo, las flags, y si el último salto se tomó y por qué.
+
+Quien sólo trabaje en el motor puede usar `uv sync` (sin PyQt6); las pruebas de la interfaz se
+saltan solas. El motor también se puede usar desde Python:
 
 ```python
 from tinyasm import run_source
