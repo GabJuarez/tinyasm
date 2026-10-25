@@ -10,8 +10,10 @@ en ``_handlers``. Ver docs/conventions.md.
 
 from collections.abc import Callable
 
+from tinyasm.errors import ExecutionError
+from tinyasm.isa import MASK32
 from tinyasm.machine import CPU
-from tinyasm.nodes import Instruction, Operand, Program
+from tinyasm.nodes import Immediate, Instruction, LabelRef, Operand, Program, Register
 from tinyasm.parser import parse
 
 type Handler = Callable[[Instruction], None]
@@ -36,10 +38,25 @@ class Executor:
     # --- operandos --------------------------------------------------------
 
     def _read(self, operand: Operand) -> int:
-        raise NotImplementedError
+        """Resuelve un operando a su valor de 32 bits sin signo."""
+        match operand:
+            case Register(name):
+                return self.cpu.read_register(name)
+            case Immediate(value):
+                # Un inmediato negativo queda en complemento a 2, igual que en un registro.
+                return value & MASK32
+            case LabelRef(name):
+                raise ExecutionError(f"la etiqueta {name!r} no se puede usar como valor")
 
     def _write(self, operand: Operand, value: int) -> None:
-        raise NotImplementedError
+        """Guarda ``value`` en el operando destino; sólo los registros son destinos válidos."""
+        match operand:
+            case Register(name):
+                self.cpu.write_register(name, value)
+            case Immediate(value=imm):
+                raise ExecutionError(f"no se puede escribir en el inmediato {imm}")
+            case LabelRef(name):
+                raise ExecutionError(f"no se puede escribir en la etiqueta {name!r}")
 
     # --- instrucciones (_op_<mnemonic>) -----------------------------------
 
