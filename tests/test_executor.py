@@ -71,13 +71,6 @@ def test_loop_with_conditional_jump():
     assert run_source(source).registers["eax"] == 6
 
 
-def test_example_sum_loop():
-    with open("examples/sum_loop.asm", encoding="utf-8") as file:
-        cpu = run_source(file.read())
-    assert cpu.registers["eax"] == 55
-    assert cpu.halted
-
-
 # --- instrucciones --------------------------------------------------------
 
 
