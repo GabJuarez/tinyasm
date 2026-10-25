@@ -2,7 +2,7 @@
 
 > Actualiza este archivo en el mismo PR en que cambies el estado de algo.
 
-**Última actualización:** 2026-10-24 — Interfaz PyQt terminada.
+**Última actualización:** 2026-10-25 — Ejemplos de cada familia de `jcc`; primera instrucción resaltada antes de ejecutar.
 
 | Componente | Estado | Notas |
 |---|---|---|

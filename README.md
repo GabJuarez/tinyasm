@@ -29,34 +29,20 @@ loop_start:
 Detalle de cada instrucción y de qué flags revisa cada salto: [docs/instructions.md](docs/instructions.md).
 Lo que queda fuera (memoria, pila, directivas...): [docs/roadmap.md](docs/roadmap.md#fuera-de-alcance).
 
-## Requisitos
-- [uv](https://docs.astral.sh/uv/) (`brew install uv` o `curl -LsSf https://astral.sh/uv/install.sh | sh`)
+## Ejemplos
 
-uv instala por su cuenta la versión de Python correcta (3.12+).
+En [`examples/`](examples) hay programas cortos para ver cómo `cmp` y las operaciones cambian
+las flags y cómo cada salto las usa. Se abren desde el menú **Ejemplos** de la interfaz.
 
-## Uso rápido
-
-```bash
-git clone https://github.com/GabJuarez/tinyasm.git
-cd tinyasm
-uv sync --extra ui         # crea .venv e instala todo, PyQt6 incluido
-uv run python -m tinyasm   # abre la interfaz
-uv run pytest              # pruebas
-```
-
-En la interfaz se escribe (o se elige de **Ejemplos**) un programa y se ejecuta completo con
-**Ejecutar** o instrucción por instrucción con **Paso**. Se ven los registros en hexadecimal,
-sin signo y con signo, las flags, y si el último salto se tomó y por qué.
-
-Quien sólo trabaje en el motor puede usar `uv sync` (sin PyQt6); las pruebas de la interfaz se
-saltan solas. El motor también se puede usar desde Python:
-
-```python
-from tinyasm import run_source
-
-cpu = run_source(open("examples/sum_loop.asm").read())
-print(cpu.registers["eax"], cpu.flags)
-```
+| Archivo | Qué muestra |
+|---|---|
+| `01_jmp.asm` | `jmp`: salta siempre, sin mirar flags |
+| `02_je_jne.asm` | `je` / `jne` y ZF |
+| `03_jl_jg_con_signo.asm` | comparación con signo: `jl` / `jg` con SF y OF |
+| `04_jb_ja_sin_signo.asm` | comparación sin signo: `jb` / `ja` con CF y ZF |
+| `05_jg_vs_ja.asm` | el mismo `cmp` con `-1` y `1`: `jg` no salta, `ja` sí |
+| `06_jc_jo_js.asm` | CF, OF y SF encendidos por `add`, con `jc`, `jo` y `js` |
+| `sum_loop.asm` | un ciclo completo: suma de 1 a 10 con `jne` |
 
 ## Arquitectura
 
@@ -68,4 +54,3 @@ print(cpu.registers["eax"], cpu.flags)
 - [Roadmap y alcance](docs/roadmap.md)
 - [Estado actual](docs/status.md)
 - [Convenciones](docs/conventions.md)
-- [Cómo contribuir](CONTRIBUTING.md)

@@ -32,8 +32,8 @@ que `cmp` / `jcc` / `jmp` funcionen y se puedan mostrar.
 - [x] Errores mostrados en la línea correspondiente
 
 ## Fase 3 — Entrega
-- [ ] Programas de ejemplo en `examples/` que cubran cada familia de `jcc`
-- [ ] Ejemplo que muestre la diferencia entre comparación con signo y sin signo (`jg` vs `ja`)
+- [x] Programas de ejemplo en `examples/` que cubran cada familia de `jcc`
+- [x] Ejemplo que muestre la diferencia entre comparación con signo y sin signo (`jg` vs `ja`)
 - [x] README con instrucciones para abrir la interfaz
 
 ## Fuera de alcance
