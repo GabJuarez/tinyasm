@@ -2,14 +2,14 @@
 
 > Actualiza este archivo en el mismo PR en que cambies el estado de algo.
 
-**Última actualización:** 2026-10-24 — Machine terminada.
+**Última actualización:** 2026-10-24 — Evaluator y machine terminados.
 
 | Componente | Estado | Notas |
 |---|---|---|
 | `tokenizer.py` | ✅ Listo | Identificadores, números (`10`, `0x1F`, `1Fh`, `0b101`), símbolos y comentarios, con línea y columna |
 | `parser.py` | ✅ Listo | Registros, inmediatos (incluidos negativos) y etiquetas; gramática en el docstring del módulo |
 | `nodes.py` | ✅ Listo | |
-| `evaluator.py` | 🔲 Pendiente | `Flags` y `AluResult` definidos |
+| `evaluator.py` | ✅ Listo | `to_signed`, `add`, `sub` (también para `cmp`) con CF/ZF/SF/OF y `condition_met` con todos los `jcc` y sus alias |
 | `machine.py` | ✅ Listo | 8 registros de 32 bits (se truncan a 32 bits sin signo), flags y EIP |
 | `executor.py` | 🔲 Pendiente | Falta el ciclo `step`/`run` y los handlers |
 | `isa.py` | ✅ Listo | Tabla de registros |
