@@ -19,9 +19,9 @@ que `cmp` / `jcc` / `jmp` funcionen y se puedan mostrar.
 - [x] Evaluator: `to_signed`, `add`, `sub` con CF/ZF/SF/OF
 - [x] Evaluator: `condition_met` con todos los `jcc` de [instructions.md](instructions.md)
 - [x] Machine: los 8 registros de 32 bits y las flags
-- [ ] Executor: `step`, `run` y protección contra ciclos infinitos (`max_steps`)
-- [ ] Executor: `mov`, `add`, `sub`, `inc`, `dec`
-- [ ] Executor: `cmp`, `jmp`, `jcc`, `hlt`
+- [x] Executor: `step`, `run` y protección contra ciclos infinitos (`max_steps`)
+- [x] Executor: `mov`, `add`, `sub`, `inc`, `dec`
+- [x] Executor: `cmp`, `jmp`, `jcc`, `hlt`
 
 ## Fase 2 — Interfaz (PyQt)
 - [ ] Editor de código con la línea actual resaltada
