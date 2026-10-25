@@ -9,7 +9,7 @@ en ``_handlers``. Ver docs/conventions.md.
 """
 
 from collections.abc import Callable
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from functools import partial
 
 from tinyasm import evaluator
@@ -22,10 +22,22 @@ from tinyasm.parser import parse
 type Handler = Callable[[Instruction], None]
 
 
+@dataclass(frozen=True, slots=True)
+class Jump:
+    """Registro del último salto ejecutado, para mostrarlo en la interfaz."""
+
+    line: int
+    mnemonic: str
+    target: str
+    taken: bool
+
+
 class Executor:
     def __init__(self, program: Program, cpu: CPU | None = None) -> None:
         self.program = program
         self.cpu = cpu or CPU()
+        self.steps = 0
+        self.last_jump: Jump | None = None
         self._handlers: dict[str, Handler] = {
             "mov": self._op_mov,
             "add": self._op_add,
@@ -68,6 +80,7 @@ class Executor:
             if error.line is None:
                 raise ExecutionError(error.message, instruction.line) from error
             raise
+        self.steps += 1
         return True
 
     def run(self, max_steps: int = 10_000) -> CPU:
@@ -166,13 +179,16 @@ class Executor:
     def _op_jmp(self, instruction: Instruction) -> None:
         (target,) = self._expect(instruction, 1)
         self.cpu.eip = self._target(target)
+        self.last_jump = Jump(instruction.line, instruction.mnemonic, target.name, taken=True)
 
     def _op_jcc(self, condition: str, instruction: Instruction) -> None:
         (target,) = self._expect(instruction, 1)
         # El destino se valida aunque el salto no se tome.
         destination = self._target(target)
-        if evaluator.condition_met(condition, self.cpu.flags):
+        taken = evaluator.condition_met(condition, self.cpu.flags)
+        if taken:
             self.cpu.eip = destination
+        self.last_jump = Jump(instruction.line, instruction.mnemonic, target.name, taken)
 
     def _op_hlt(self, instruction: Instruction) -> None:
         self._expect(instruction, 0)

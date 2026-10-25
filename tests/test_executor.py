@@ -3,7 +3,7 @@ import pytest
 from tinyasm import evaluator
 from tinyasm.errors import ExecutionError
 from tinyasm.evaluator import Flags
-from tinyasm.executor import Executor, run_source
+from tinyasm.executor import Executor, Jump, run_source
 from tinyasm.isa import CONDITIONS
 from tinyasm.nodes import Immediate, LabelRef, Program, Register
 from tinyasm.parser import parse
@@ -222,3 +222,25 @@ def test_failed_step_keeps_eip_on_instruction():
     with pytest.raises(ExecutionError):
         executor.step()
     assert executor.cpu.eip == 1
+
+
+# --- información para la interfaz -----------------------------------------
+
+
+def test_last_jump_records_taken_and_not_taken():
+    executor = Executor(parse("mov eax, 1\ncmp eax, 1\njne fin\nje fin\nfin: hlt"))
+    assert executor.last_jump is None
+    executor.run()
+    assert executor.last_jump == Jump(line=4, mnemonic="je", target="fin", taken=True)
+
+
+def test_last_jump_not_taken():
+    executor = Executor(parse("cmp eax, 1\nje fin\nfin: hlt"))
+    executor.run()
+    assert executor.last_jump == Jump(line=2, mnemonic="je", target="fin", taken=False)
+
+
+def test_steps_counts_executed_instructions():
+    executor = Executor(parse("mov eax, 1\njmp fin\nmov eax, 2\nfin: hlt"))
+    executor.run()
+    assert executor.steps == 3
