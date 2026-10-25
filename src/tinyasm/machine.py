@@ -5,8 +5,9 @@ Es el único estado mutable del proyecto y sólo el executor lo modifica.
 
 from dataclasses import dataclass, field
 
+from tinyasm.errors import ExecutionError
 from tinyasm.evaluator import Flags
-from tinyasm.isa import REGISTERS
+from tinyasm.isa import MASK32, REGISTERS
 
 
 @dataclass
@@ -19,8 +20,12 @@ class CPU:
 
     def read_register(self, name: str) -> int:
         """Lee un registro de 32 bits (``eax``, ``ebx``...)."""
-        raise NotImplementedError
+        if name not in self.registers:
+            raise ExecutionError(f"registro desconocido {name!r}")
+        return self.registers[name]
 
     def write_register(self, name: str, value: int) -> None:
         """Escribe un registro truncando a 32 bits sin signo (``-1`` queda como ``0xFFFFFFFF``)."""
-        raise NotImplementedError
+        if name not in self.registers:
+            raise ExecutionError(f"registro desconocido {name!r}")
+        self.registers[name] = value & MASK32
