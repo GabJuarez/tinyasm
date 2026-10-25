@@ -2,12 +2,12 @@
 
 > Actualiza este archivo en el mismo PR en que cambies el estado de algo.
 
-**Última actualización:** 2026-10-24 — Alcance recortado a `cmp` / `jmp` / `jcc` + interfaz; tokenizer terminado.
+**Última actualización:** 2026-10-24 — Tokenizer y parser terminados.
 
 | Componente | Estado | Notas |
 |---|---|---|
 | `tokenizer.py` | ✅ Listo | Identificadores, números (`10`, `0x1F`, `1Fh`, `0b101`), símbolos y comentarios, con línea y columna |
-| `parser.py` | 🔲 Pendiente | Registros, inmediatos y etiquetas; gramática en el docstring del módulo |
+| `parser.py` | ✅ Listo | Registros, inmediatos (incluidos negativos) y etiquetas; gramática en el docstring del módulo |
 | `nodes.py` | ✅ Listo | |
 | `evaluator.py` | 🔲 Pendiente | `Flags` y `AluResult` definidos |
 | `machine.py` | 🔲 Pendiente | 8 registros de 32 bits y flags |
