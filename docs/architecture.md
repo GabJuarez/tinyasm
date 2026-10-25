@@ -23,8 +23,17 @@ Módulos de apoyo:
 
 ## Interfaz
 
-La UI vivirá en el subpaquete `src/tinyasm/ui/` y PyQt se agregará como dependencia opcional
-(`uv add --optional ui pyqt6`), para que quien solo trabaje en el motor no tenga que instalarlo.
+La UI vive en el subpaquete `src/tinyasm/ui/` y PyQt6 es una dependencia opcional (extra `ui`),
+para que quien solo trabaje en el motor no tenga que instalarlo. Se abre con
+`uv run python -m tinyasm` (`src/tinyasm/__main__.py`).
+
+| Archivo | Qué hace |
+|---|---|
+| `ui/main_window.py` | `MainWindow`: la única pieza que tiene el `Executor`; parsea, llama a `step()`/`run()` y reparte el estado |
+| `ui/editor.py` | `CodeEditor`: números de línea, línea actual (amarillo) y línea con error (rojo); `AsmHighlighter` colorea la sintaxis usando el tokenizer del proyecto |
+| `ui/panels.py` | Paneles de sólo lectura: registros, flags y último salto |
+| `ui/fonts.py` | Tamaño de letra de la interfaz y fuente monoespaciada |
+
 
 - La UI **solo consume** el motor: crea un `Executor`, llama a `step()` o `run()` y pinta
   `executor.cpu.registers`, `executor.cpu.flags` y `executor.cpu.eip`.

@@ -24,17 +24,17 @@ que `cmp` / `jcc` / `jmp` funcionen y se puedan mostrar.
 - [x] Executor: `cmp`, `jmp`, `jcc`, `hlt`
 
 ## Fase 2 — Interfaz (PyQt)
-- [ ] Editor de código con la línea actual resaltada
-- [ ] Botones ejecutar / paso a paso / reiniciar
-- [ ] Panel de registros (hexadecimal y decimal con signo)
-- [ ] Panel de flags (CF, ZF, SF, OF)
-- [ ] Indicador de si el último salto se tomó o no, y a qué etiqueta
-- [ ] Errores mostrados en la línea correspondiente
+- [x] Editor de código con la línea actual resaltada
+- [x] Botones ejecutar / paso a paso / reiniciar
+- [x] Panel de registros (hexadecimal y decimal con signo)
+- [x] Panel de flags (CF, ZF, SF, OF)
+- [x] Indicador de si el último salto se tomó o no, y a qué etiqueta
+- [x] Errores mostrados en la línea correspondiente
 
 ## Fase 3 — Entrega
 - [ ] Programas de ejemplo en `examples/` que cubran cada familia de `jcc`
 - [ ] Ejemplo que muestre la diferencia entre comparación con signo y sin signo (`jg` vs `ja`)
-- [ ] README con instrucciones para abrir la interfaz
+- [x] README con instrucciones para abrir la interfaz
 
 ## Fuera de alcance
 Decidido para que entre en el plazo; se puede retomar si sobra tiempo:
