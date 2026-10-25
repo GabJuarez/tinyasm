@@ -15,7 +15,7 @@ que `cmp` / `jcc` / `jmp` funcionen y se puedan mostrar.
 
 ## Fase 1 — Motor
 - [x] Tokenizer: identificadores, números (dec/hex/bin), símbolos, comentarios
-- [ ] Parser: registros, inmediatos (incluidos negativos) y etiquetas
+- [x] Parser: registros, inmediatos (incluidos negativos) y etiquetas
 - [ ] Evaluator: `to_signed`, `add`, `sub` con CF/ZF/SF/OF
 - [ ] Evaluator: `condition_met` con todos los `jcc` de [instructions.md](instructions.md)
 - [ ] Machine: los 8 registros de 32 bits y las flags
