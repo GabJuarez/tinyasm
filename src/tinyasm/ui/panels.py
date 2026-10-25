@@ -60,7 +60,7 @@ class RegistersPanel(QGroupBox):
         layout.addWidget(self._table)
         layout.addWidget(self._eip)
 
-    def refresh(self, cpu: CPU, changed: set[str], line: int | None) -> None:
+    def refresh(self, cpu: CPU, changed: set[str], line: int | None, finished: bool) -> None:
         for row, name in enumerate(REGISTERS):
             value = cpu.registers[name]
             texts = (f"0x{value:08X}", str(value), str(to_signed(value)))
@@ -74,8 +74,12 @@ class RegistersPanel(QGroupBox):
                     item.setBackground(QBrush())
                     item.setForeground(QBrush())
 
-        where = f"línea {line}" if line is not None else "fin del programa"
-        self._eip.setText(f"EIP  {cpu.eip}  ({where})")
+        if line is not None:
+            self._eip.setText(f"EIP  {cpu.eip}  (línea {line})")
+        elif finished:
+            self._eip.setText(f"EIP  {cpu.eip}  (fin del programa)")
+        else:
+            self._eip.setText(f"EIP  {cpu.eip}")
 
 
 class FlagsPanel(QGroupBox):

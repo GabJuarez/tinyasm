@@ -108,12 +108,26 @@ class MainWindow(QMainWindow):
         self._execute(Executor.step)
 
     def _reset(self) -> None:
-        self._executor = None
+        # Se parsea en silencio para resaltar la primera instrucción antes del primer paso.
+        # Si el código tiene errores (p. ej. a medio escribir), el error se muestra hasta
+        # que se presione Ejecutar o Paso.
+        try:
+            self._executor = Executor(parse(self._editor.toPlainText()))
+        except TinyAsmError:
+            self._executor = None
+
+        line = None
+        finished = False
+        if self._executor is not None:
+            finished = self._executor.finished
+            if not finished:
+                line = self._executor.program.instructions[0].line
+
         cpu = CPU()
-        self._registers.refresh(cpu, changed=set(), line=None)
+        self._registers.refresh(cpu, changed=set(), line=line, finished=finished)
         self._flags.refresh(cpu.flags, changed=set())
         self._jump.refresh(None)
-        self._editor.set_current_line(None)
+        self._editor.set_current_line(line)
         self._editor.set_error_line(None)
         self._set_running(True)
         self._status.setText("Listo")
@@ -147,7 +161,7 @@ class MainWindow(QMainWindow):
         }
         line = None if executor.finished else executor.program.instructions[cpu.eip].line
 
-        self._registers.refresh(cpu, changed, line)
+        self._registers.refresh(cpu, changed, line, executor.finished)
         self._flags.refresh(cpu.flags, changed_flags)
         self._jump.refresh(executor.last_jump)
         self._editor.set_current_line(line)

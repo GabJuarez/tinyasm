@@ -24,8 +24,24 @@ def window():
 
 
 def test_loads_first_example(window):
-    assert "loop_start" in window._editor.toPlainText()
+    assert window._examples.currentText() == "01_jmp"
+    assert "jmp fin" in window._editor.toPlainText()
     assert window._status.text() == "Listo"
+
+
+def test_first_instruction_is_highlighted_before_stepping(window):
+    window._editor.setPlainText("; comentario\n\ninicio:\n    mov eax, 1\n    hlt")
+    assert window._editor._current_line == 4
+    window._step()
+    assert window._editor._current_line == 5
+
+
+def test_invalid_code_highlights_nothing_until_run(window):
+    window._editor.setPlainText("mov eax, [ebx]")
+    assert window._editor._current_line is None
+    assert window._status.text() == "Listo"
+    window._run()
+    assert window._editor._error_line == 1
 
 
 def test_step_updates_state(window):
@@ -55,6 +71,9 @@ def test_editing_resets_execution(window):
     window._editor.setPlainText("mov eax, 5")
     window._run()
     window._editor.setPlainText("mov eax, 6")
-    assert window._executor is None
+    # Ejecución nueva: CPU en ceros y lista en la primera instrucción.
+    assert window._executor.steps == 0
+    assert window._executor.cpu.registers["eax"] == 0
+    assert window._editor._current_line == 1
     assert window._status.text() == "Listo"
     assert window._run_action.isEnabled()
