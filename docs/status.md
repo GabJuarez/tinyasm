@@ -2,7 +2,7 @@
 
 > Actualiza este archivo en el mismo PR en que cambies el estado de algo.
 
-**Última actualización:** 2026-10-24 — Tokenizer y parser terminados.
+**Última actualización:** 2026-10-24 — Machine terminada.
 
 | Componente | Estado | Notas |
 |---|---|---|
@@ -10,7 +10,7 @@
 | `parser.py` | ✅ Listo | Registros, inmediatos (incluidos negativos) y etiquetas; gramática en el docstring del módulo |
 | `nodes.py` | ✅ Listo | |
 | `evaluator.py` | 🔲 Pendiente | `Flags` y `AluResult` definidos |
-| `machine.py` | 🔲 Pendiente | 8 registros de 32 bits y flags |
+| `machine.py` | ✅ Listo | 8 registros de 32 bits (se truncan a 32 bits sin signo), flags y EIP |
 | `executor.py` | 🔲 Pendiente | Falta el ciclo `step`/`run` y los handlers |
 | `isa.py` | ✅ Listo | Tabla de registros |
 | Interfaz (PyQt) | 🔲 Pendiente | Irá en `src/tinyasm/ui/` |
